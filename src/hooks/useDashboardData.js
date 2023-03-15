@@ -4,7 +4,7 @@ import React, { useState, useEffect} from 'react';
 import { fetchData } from 'api/getCSVInfo';
 import moment from 'moment';
 
-const CSV_PATH = __dirname + 'free/revenue-by-date.csv';
+const CSV_PATH = '/revenue-dashboard/revenue-by-date.csv';
 const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
   "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
