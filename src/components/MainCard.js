@@ -46,6 +46,7 @@ const MainCard = forwardRef(
                 {...others}
                 sx={{
                     ...sx,
+                    width: '100%',
                     border: border ? '1px solid' : 'none',
                     borderRadius: 2,
                     borderColor: theme.palette.mode === 'dark' ? theme.palette.divider : theme.palette.grey.A800,
@@ -58,6 +59,9 @@ const MainCard = forwardRef(
                         p: '16px !important',
                         fontFamily: theme.typography.fontFamily,
                         fontSize: '0.75rem'
+                    },
+                    "@media screen and (min-width: 1240px)": {
+                        width: '48%'
                     }
                 }}
             >

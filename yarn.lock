@@ -5015,6 +5015,11 @@ fs.realpath@^1.0.0:
   resolved "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz"
   integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
 
+fs@^0.0.1-security:
+  version "0.0.1-security"
+  resolved "https://registry.yarnpkg.com/fs/-/fs-0.0.1-security.tgz#8a7bd37186b6dddf3813f23858b57ecaaf5e41d4"
+  integrity sha512-3XY9e1pP0CVEUCdj5BmfIZxRBTSDycnbqhIOGec9QYtmVH2fbLpj86CFWkrNOkt/Fvty4KZG5lTglL9j/gJ87w==
+
 fsevents@^2.3.2, fsevents@~2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
@@ -5272,6 +5277,16 @@ hey-listen@^1.0.8:
   version "1.0.8"
   resolved "https://registry.npmjs.org/hey-listen/-/hey-listen-1.0.8.tgz"
   integrity sha512-COpmrF2NOg4TBWUJ5UVyaCU2A88wEMkUPK4hNqyCkqHbxT92BbvfjoSozkAIIm6XhicGlJHhFdullInrdhwU8Q==
+
+highcharts-react-official@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.npmjs.org/highcharts-react-official/-/highcharts-react-official-3.2.0.tgz"
+  integrity sha512-71IJZsLmEboYFjONpwC3NRsg6JKvtKYtS5Si3e6s6MLRSOFNOY8KILTkzvO36kjpeR/A0X3/kvvewE+GMPpkjw==
+
+highcharts@^10.3.3:
+  version "10.3.3"
+  resolved "https://registry.yarnpkg.com/highcharts/-/highcharts-10.3.3.tgz#b8acca24f2d4b1f2f726540734166e59e07b35c4"
+  integrity sha512-r7wgUPQI9tr3jFDn3XT36qsNwEIZYcfgz4mkKEA6E4nn5p86y+u1EZjazIG4TRkl5/gmGRtkBUiZW81g029RIw==
 
 highlight.js@^10.4.1, highlight.js@~10.7.0:
   version "10.7.3"
@@ -6785,6 +6800,11 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.6"
 
+moment@^2.29.4:
+  version "2.29.4"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
+  integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
+
 ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/ms/-/ms-2.0.0.tgz"
@@ -7083,6 +7103,11 @@ p-try@^2.0.0:
   version "2.2.0"
   resolved "https://registry.npmjs.org/p-try/-/p-try-2.2.0.tgz"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
+
+papaparse@^5.4.0:
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-5.4.0.tgz#a3e47c32f32466d30af67ce2fef7910b3c3d4d91"
+  integrity sha512-ZBQABWG09p+u8rFoJVl/GhgxZ5zy9Zh1Lu/LVc7VX5T4nljjC14/YTcpebYwqP218B9X307eBOP7Tuhoqv7v7w==
 
 param-case@^3.0.4:
   version "3.0.4"
