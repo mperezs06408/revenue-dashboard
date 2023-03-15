@@ -2,7 +2,7 @@
     "name": "mantis-free-react-admin-template",
     "version": "1.1.1",
     "private": true,
-    "homepage": "https://mantisdashboard.io/free",
+    "homepage": "https://mperezs06408.github.io/revenue-dashboard",
     "dependencies": {
         "@ant-design/colors": "^6.0.0",
         "@ant-design/icons": "^4.7.0",
@@ -19,6 +19,7 @@
         "formik": "^2.2.9",
         "framer-motion": "^7.3.6",
         "fs": "^0.0.1-security",
+        "gh-pages": "^5.0.0",
         "highcharts": "^10.3.3",
         "highcharts-react-official": "^3.2.0",
         "history": "^5.3.0",
@@ -51,6 +52,8 @@
     "scripts": {
         "start": "DISABLE_ESLINT_PLUGIN=true react-scripts start",
         "build": "DISABLE_ESLINT_PLUGIN=true react-scripts build",
+        "predeploy": "yarn run build",
+        "deploy": "gh-pages -d build",
         "test": "DISABLE_ESLINT_PLUGIN=true react-scripts test",
         "eject": "DISABLE_ESLINT_PLUGIN=true react-scripts eject"
     },
