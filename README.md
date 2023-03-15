@@ -36,6 +36,12 @@ yarn start
 ```
 To see the result of the app please go to [http://localhost:3000/free](http://localhost:3000/free) 
 
+### Live testing
+
+For testing use of this DEMO, you can enter to the next link:
+
+- [Revenue Dashboard by GitHub Pages](https://mperezs06408.github.io/revenue-dashboard/)
+
 ### Available taxonomy for Revenue Dashboard
 
 Because Revenue Dashboard implements Mantis Templates as a first version, code implementation for this DEMO is located over the next taxonomy:
