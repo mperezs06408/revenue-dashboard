@@ -1,10 +1,10 @@
 {
   "files": {
     "main.css": "/revenue-dashboard/static/css/main.e1f2bb6b.css",
-    "main.js": "/revenue-dashboard/static/js/main.301a4013.js",
+    "main.js": "/revenue-dashboard/static/js/main.11d77cc6.js",
     "static/js/243.271bb4ae.chunk.js": "/revenue-dashboard/static/js/243.271bb4ae.chunk.js",
     "static/js/180.339c8b13.chunk.js": "/revenue-dashboard/static/js/180.339c8b13.chunk.js",
-    "static/js/431.22fef266.chunk.js": "/revenue-dashboard/static/js/431.22fef266.chunk.js",
+    "static/js/431.0a094b61.chunk.js": "/revenue-dashboard/static/js/431.0a094b61.chunk.js",
     "static/js/525.bfe6d473.chunk.js": "/revenue-dashboard/static/js/525.bfe6d473.chunk.js",
     "static/js/893.10eda85e.chunk.js": "/revenue-dashboard/static/js/893.10eda85e.chunk.js",
     "static/js/165.91c66ba6.chunk.js": "/revenue-dashboard/static/js/165.91c66ba6.chunk.js",
@@ -21,6 +21,6 @@
   },
   "entrypoints": [
     "static/css/main.e1f2bb6b.css",
-    "static/js/main.301a4013.js"
+    "static/js/main.11d77cc6.js"
   ]
 }
