@@ -1,7 +1,8 @@
 // material-ui
 import {
     Grid,
-    Typography
+    Typography,
+    CircularProgress
 } from '@mui/material';
 
 // project import
@@ -30,6 +31,7 @@ const DashboardDefault = () => {
     } = useDashboardData();
 
     const {
+        isLoading,
         totalRevenue,
         generalTotalOrders,
         newCustomers,
@@ -64,70 +66,99 @@ const DashboardDefault = () => {
 
 
     return (
-        <Grid container rowSpacing={4.5} columnSpacing={1}>
-            <Grid item xs={12} sx={{ mb: 2.25 }}>
-                <Typography variant="h5">Dashboard</Typography>
+        <section>
+            <Grid container>
+                <Grid item xs={12} sx={{ mb: 2.25 }}>
+                    <Typography variant="h5">Dashboard</Typography>
+                </Grid>
             </Grid>
-            {/* row 1 */}
-            <Grid container xs={12} md={12} lg={12} justifyContent={'space-around'}>
-                <MainCard>
-                    <Grid container justifyContent={'space-between'}>
-                        <Grid item xs={12} sm={6} md={4} lg={3}>
-                            <AnalyticEcommerce title="Total Revenue" count={totalRevenue} symbol='CURRENCY' percentage={31} />
+            {
+                isLoading ?
+                <Grid item xs={12} sx={{margin: 'auto'}}>
+                    <MainCard>
+                        <Grid container justifyContent={"center"}>
+                            <CircularProgress />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={3}>
-                            <AnalyticEcommerce title="Total Orders" count={generalTotalOrders} percentage={28} />
+                    </MainCard>
+                </Grid>
+                :
+                <>
+                    <Grid container rowSpacing={4.5} columnSpacing={1} sx={{mb: 1}}>
+                        <Grid item xs={12} sm={6} md={6} alignItems={"stretch"}>
+                            <MainCard>
+                                <Grid container justifyContent={'space-between'}>
+                                    <Grid item xs={12} sm={6} md={4} lg={3} sx={{
+                                        "@media screen and (min-width: 600px)": {
+                                            justifyContent: 'center'
+                                        }
+                                    }}>
+                                        <AnalyticEcommerce title="Total Revenue" count={totalRevenue} symbol='CURRENCY' percentage={31} />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={4} lg={3}>
+                                        <AnalyticEcommerce title="Total Orders" count={generalTotalOrders} percentage={28} />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={4} lg={3}>
+                                        <AnalyticEcommerce title="New Customers" count={newCustomers} percentage={27} />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={4} lg={3}>
+                                        <AnalyticEcommerce title="% New Customers Revenue" count={percentageNewCustomersRevenue} symbol='PERCENTAGE' percentage={3} />
+                                    </Grid>
+                                </Grid>
+                            </MainCard>
                         </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={3}>
-                            <AnalyticEcommerce title="New Customers" count={newCustomers} percentage={27} />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4} lg={3}>
-                            <AnalyticEcommerce title="% New Customers Revenue" count={percentageNewCustomersRevenue} symbol='PERCENTAGE' percentage={3} />
+                        <Grid item xs={12} sm={6} md={6}>
+                            <MainCard>
+                                <Grid container justifyContent={'space-between'}>
+                                    <Grid item xs={12} sm={6} md={6} lg={12/5}>
+                                        <AnalyticEcommerce title="Avg Revenue/Day" count={avgRevenueDay} symbol='CURRENCY' percentage={31} />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={6} lg={12/5}>
+                                        <AnalyticEcommerce title="Avg Orders/Day" count={avgOrdersDay} percentage={28} />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={6} lg={12/5}>
+                                        <AnalyticEcommerce title="Avg Items/Order" count={avgItemsPerOrder} percentage={8} />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={6} lg={12/5}>
+                                        <AnalyticEcommerce title="Avg Order Value" count={avgOrderValue} symbol='CURRENCY' percentage={3} />
+                                    </Grid>
+                                    <Grid item xs={12} sm={6} md={6} lg={12/5}>
+                                        <AnalyticEcommerce title="Avg New Customers/Day" count={avgNewCustomersPerDay} percentage={27} />
+                                    </Grid>
+                                </Grid>
+                            </MainCard>
                         </Grid>
                     </Grid>
-                </MainCard>
-                <MainCard>
-                    <Grid container justifyContent={'space-between'}>
-                        <Grid item xs={12} sm={6} md={6} lg={12/5}>
-                            <AnalyticEcommerce title="Avg Revenue/Day" count={avgRevenueDay} symbol='CURRENCY' percentage={31} />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={6} lg={12/5}>
-                            <AnalyticEcommerce title="Avg Orders/Day" count={avgOrdersDay} percentage={28} />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={6} lg={12/5}>
-                            <AnalyticEcommerce title="Avg Items/Order" count={avgItemsPerOrder} percentage={8} />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={6} lg={12/5}>
-                            <AnalyticEcommerce title="Avg Order Value" count={avgOrderValue} symbol='CURRENCY' percentage={3} />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={6} lg={12/5}>
-                            <AnalyticEcommerce title="Avg New Customers/Day" count={avgNewCustomersPerDay} percentage={27} />
+                    <Grid container rowSpacing={4.5} columnSpacing={1} sx={{mb: 1}}>
+                        <Grid item xs={12} justifyContent={'center'}>
+                            <MainCard>
+                                <HighchartsReact 
+                                    highcharts={Highcharts}
+                                    options={revenueByDate}
+                                />
+                            </MainCard>
                         </Grid>
                     </Grid>
-                </MainCard>
-            </Grid>
-            {/* row 2 */}
-            <Grid item xs={12} md={12} lg={12}>
-                <HighchartsReact 
-                    highcharts={Highcharts}
-                    options={revenueByDate}
-                />
-            </Grid>
-
-            {/* row 3 */}
-            <Grid item xs={12} md={6} lg={6}>
-                <HighchartsReact 
-                    highcharts={Highcharts}
-                    options={revenueBySourcePercentageGeneral}
-                />
-            </Grid>
-            <Grid item xs={12} md={6} lg={6}>
-                <HighchartsReact 
-                    highcharts={Highcharts}
-                    options={revenueBySource}
-                />
-            </Grid>
-        </Grid>
+                    <Grid container rowSpacing={4.5} columnSpacing={1}>
+                        <Grid item xs={12} sm={6}>
+                            <MainCard>
+                                <HighchartsReact 
+                                    highcharts={Highcharts}
+                                    options={revenueBySourcePercentageGeneral}
+                                />
+                            </MainCard>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <MainCard>
+                                <HighchartsReact 
+                                    highcharts={Highcharts}
+                                    options={revenueBySource}
+                                />
+                            </MainCard>
+                        </Grid>
+                    </Grid>
+                </>
+            }
+        </section>
     );
 };
 

@@ -10,8 +10,8 @@ import { CaretUpOutlined, CaretDownOutlined } from '@ant-design/icons';
 
 const AnalyticEcommerce = ({ color, title, count, symbol, percentage, isLoss }) => (
         <>
-            <Grid container alignItems="center">
-                <Grid item>
+            <Grid container alignItems="center" sx={{width: '100%'}}>
+                <Grid item xs={!!percentage ? 6 : 12} textAlign={!!percentage ? 'right': 'center'}>
                     <Typography variant="h5">
                         {symbol && symbol === 'CURRENCY' && '$'
                         }{count}{
@@ -20,7 +20,7 @@ const AnalyticEcommerce = ({ color, title, count, symbol, percentage, isLoss }) 
                     </Typography>
                 </Grid>
                 {percentage && (
-                    <Grid item>
+                    <Grid item xs={6} textAlign={'left'}>
                         <Chip
                             variant="combined"
                             color={color}
@@ -42,9 +42,11 @@ const AnalyticEcommerce = ({ color, title, count, symbol, percentage, isLoss }) 
                     </Grid>
                 )}
             </Grid>
-            <Typography variant="h6" color="textSecondary" style={{fontSize: '0.75rem'}}>
-                {title}
-            </Typography>
+            <Grid item xs={12} textAlign={'center'}>
+                <Typography variant="h6" color="textSecondary" style={{fontSize: '0.75rem'}}>
+                    {title}
+                </Typography>
+            </Grid>
         </>
 );
 
