@@ -26,7 +26,7 @@ const AnalyticEcommerce = ({ color, title, count, symbol, percentage, isLoss }) 
                             color={color}
                             style={{
                                 backgroundColor: 'transparent',
-                                color: '#000',
+                                color: '#00B89E',
                                 fontSize: '0.75rem'
                             }}
                             icon={

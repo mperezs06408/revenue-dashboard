@@ -9,16 +9,23 @@ export const revenueByDateOptions = ({
     newCustomerOrders
 }) => ({
     chart: {
-        type: 'column'
+        type: 'column',
     },
     title: {
-        text: 'Revenue by Date',
-        align: 'left'
+        text: '',
+    },
+    legend: {
+        align: 'right',
+        symbolRadius:3,
+        symbolWidth: 16,
     },
     xAxis: {
         type: 'datetime',
         dateTimeLabelFormats: {
             day: '%e %b'
+        },
+        labels:{
+            rotation: -45
         }
     },
     yAxis: [
@@ -31,7 +38,8 @@ export const revenueByDateOptions = ({
                 formatter: function () {
                   return '$' + Highcharts.numberFormat(this.total, 0, ',', '.');
                 }
-            }
+            },
+            reversedStacks: false
         },
         {
             labels: {
@@ -94,32 +102,26 @@ export const revenueBySourcePercentageOptions = ({revenueBySourcePercentage}) =>
         type: 'column'
     },
     title: {
-        text: 'Revenue by Source',
-        align: 'left'
+        text: ''
     },
     xAxis: {
-        categories: revenueBySourcePercentage[0]
+        categories: revenueBySourcePercentage[0],
+        labels:{
+            rotation: -45
+        }
     },
     yAxis: {
         min: 0,
         title: {
-            text: 'Percentage'
+            enabled: false
         },
         labels: {
-            formatter: function() {
-                var value = this.value;
-                var suffixes = ["", "k", "M", "G", "T", "P", "E"];
-                var suffixNum = Math.floor((""+value).length/3);
-                var shortValue = parseFloat((suffixNum !== 0 ? (value / Math.pow(1000,suffixNum)) : value).toPrecision(2));
-                if (shortValue % 1 !== 0) {
-                    shortValue = shortValue.toFixed(1);
-                }
-                return shortValue+suffixes[suffixNum];
-            }
-        },
+            format: '{value} %'
+        }
     },
     legend: {
-        reversed: true
+        reversed: true,
+        symbolRadius:3
     },
     tooltip: {
         pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
@@ -144,11 +146,16 @@ export const revenueBySourceOptions = ({totalRevenueBySource}) => ({
         inverted: true
     },
     title: {
-        text: 'Revenue by Source',
-        align: 'left'
+        text: '',
+    },
+    legend: {
+        enabled: false
     },
     xAxis: {
-        categories: totalRevenueBySource.map( item => item[0])
+        categories: totalRevenueBySource.map( item => item[0]),
+        labels:{
+            rotation: -45
+        }
     },
     yAxis: {
         labels: {
@@ -188,8 +195,7 @@ export const revenueByCountryOptions = ({totalRevenueByCountry}) => ({
         type: 'pie'
     },
     title: {
-        text: 'Revenue by Country',
-        align: 'left'
+        text: '',
     },
     tooltip: {
         pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b><br/> Revenue on the last 30 days: <b>$ {point.tooltip.revenue}</b>'

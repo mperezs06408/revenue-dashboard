@@ -28,12 +28,17 @@ const formatter =  (value) => {
 export function useDashboardData() {
     const [isLoading, setIsLoading] = useState(true);
     const [data, setData] = useState([]);
+    const [previousData, setPreviousData] = useState([]);
     const [generalMetrics, setGeneralMetrics] = useState({
         isLoading: true,
         totalRevenue:0,
         generalTotalOrders:0,
         newCustomers:0,
-        percentageNewCustomersRevenue:0
+        percentageNewCustomersRevenue:0,
+        variationTotalRevenue:0,
+        variationGeneralTotalOrders:0,
+        variationNewCustomers:0,
+        variationNewCustomersRevenue:0
     })
     const [averagePerformance, setAveragePerformance] = useState({
         isLoading: true,
@@ -41,7 +46,12 @@ export function useDashboardData() {
         avgOrdersDay:0,
         avgItemsPerOrder:0,
         avgOrderValue:0,
-        avgNewCustomersPerDay:0
+        avgNewCustomersPerDay:0,
+        variationAvgRevenueDay:0,
+        variationAvgOrdersDay:0,
+        variationAvgItemsPerOrder:0,
+        variationAvgOrderValue:0,
+        variationAvgNewCustomersPerDay:0,
     })
     const [revenueByDate, setRevenueByDate] = useState({
         isLoading: true,
@@ -64,7 +74,11 @@ export function useDashboardData() {
         totalRevenue,
         generalTotalOrders,
         newCustomers,
-        percentageNewCustomersRevenue
+        percentageNewCustomersRevenue,
+        variationTotalRevenue,
+        variationGeneralTotalOrders,
+        variationNewCustomers,
+        variationNewCustomersRevenue,
     } = generalMetrics;
 
     const {
@@ -72,7 +86,12 @@ export function useDashboardData() {
         avgOrdersDay,
         avgItemsPerOrder,
         avgOrderValue,
-        avgNewCustomersPerDay
+        avgNewCustomersPerDay,
+        variationAvgRevenueDay,
+        variationAvgOrdersDay,
+        variationAvgItemsPerOrder,
+        variationAvgOrderValue,
+        variationAvgNewCustomersPerDay,
     } = averagePerformance;
     
     const {
@@ -131,25 +150,43 @@ export function useDashboardData() {
             return a.order_date - b.order_date
         })
 
-        newData = getLast30DaysData(newData);
+        newData = getLast60DaysData(newData);
 
-        setData(newData)
+        setData(newData.one_month_ago);
+        setPreviousData(newData.two_months_ago);
     }
 
-    const getLast30DaysData = (array) => {
+    const getLast60DaysData = (array) => {
         const mostRecentDay = array[array.length - 1].order_date;
 
-        const dateFromArr = new Date(mostRecentDay)
+        const dateFrom30DaysAgo = new Date(mostRecentDay)
+        dateFrom30DaysAgo.setDate(dateFrom30DaysAgo.getDate() - 30);
 
-        dateFromArr.setDate(dateFromArr.getDate() - 30);
+        const dateFrom60DaysAgo = new Date(dateFrom30DaysAgo);
+        dateFrom60DaysAgo.setDate(dateFrom60DaysAgo.getDate() - 30);
 
-        const dataFiltered = array.filter( (row) => {
+        let dataFilteredFrom60DA = array.filter( (row) => {
             const timestamptToDate = new Date(row.order_date);
 
-            return timestamptToDate > dateFromArr
+            return timestamptToDate > dateFrom60DaysAgo
         })
 
-        return dataFiltered;
+        const dataFilteredFrom30DA = dataFilteredFrom60DA.filter( (row) => {
+            const timestampToDate = new Date(row.order_date);
+
+            return timestampToDate > dateFrom30DaysAgo
+        })
+        dataFilteredFrom60DA = dataFilteredFrom60DA.filter( (row) => {
+            const timestampToDate = new Date(row.order_date);
+
+            return timestampToDate <= dateFrom30DaysAgo
+        })
+
+
+        return {
+            "one_month_ago" : dataFilteredFrom30DA,
+            "two_months_ago" : dataFilteredFrom60DA
+        };
     }
 
     const orderByGeneralMetrics = () => {
@@ -158,12 +195,30 @@ export function useDashboardData() {
         const countNewCustomers = data.reduce((accumulator, item) => item.customer_type === "New" ? accumulator + 1 : accumulator,0);
         const countNewCustomersRevenue = data.reduce((accumulator, item) => item.customer_type === "New" ? accumulator + parseFloat(item.order_revenue) : accumulator,0);
         const totalItemsQuantity = data.reduce((accumulator, item) => accumulator + parseInt(item.item_quantity),0);
-        const avgItemsOrder = totalItemsQuantity/data.length;
+        const avgItemsOrder = totalItemsQuantity/countTotalOrders;
+
+        //Previous metrics
+        const previousCountTotalRevenue = previousData.reduce((accumulator, item) => accumulator + Math.floor(item.order_revenue),0);
+        const previousCountTotalOrders = previousData.reduce((accumulator, item) => accumulator + parseInt(item.num_orders),0);
+        const previousCountNewCustomers = previousData.reduce((accumulator, item) => item.customer_type === "New" ? accumulator + 1 : accumulator,0);
+        const previousCountNewCustomersRevenue = previousData.reduce((accumulator, item) => item.customer_type === "New" ? accumulator + parseFloat(item.order_revenue) : accumulator,0);
+        const previousTotalItemsQuantity = previousData.reduce((accumulator, item) => accumulator + parseInt(item.item_quantity),0);
+        const previousAvgItemsOrder = previousTotalItemsQuantity/previousCountTotalOrders;
+
+        console.log('prev', previousCountTotalRevenue)
 
         const avgRevenueDay = parseInt(countTotalRevenue/30);
         const avgOrdersDay = parseInt(countTotalOrders/30);
-        const avgOrderValue = countTotalRevenue/totalItemsQuantity;
+        const avgOrderValue = countTotalRevenue/countTotalOrders;
         const avgNewCustomersDay = parseInt(countNewCustomers/30);
+
+        //Previous metrics
+        const previousAvgRevenueDay = parseInt(previousCountTotalRevenue/30);
+        const previousAvgOrdersDay = parseInt(previousCountTotalOrders/30);
+        const previousAvgOrderValue = previousCountTotalRevenue/previousCountTotalOrders;
+        const previousAvgNewCustomersDay = parseInt(previousCountNewCustomers/30);
+
+        const diffPercentage = (previousValue, currentValue) => Math.floor(((currentValue - previousValue)/previousValue) * 100)
 
         setGeneralMetrics({
             ...generalMetrics,
@@ -171,8 +226,13 @@ export function useDashboardData() {
             totalRevenue: formatter(countTotalRevenue),
             generalTotalOrders:formatter(countTotalOrders),
             newCustomers:formatter(countNewCustomers),
-            percentageNewCustomersRevenue: formatter(parseFloat((countNewCustomersRevenue / countTotalRevenue) * 100))
+            percentageNewCustomersRevenue: formatter(parseFloat((countNewCustomersRevenue / countTotalRevenue) * 100)),
+            variationTotalRevenue: diffPercentage(previousCountTotalRevenue, countTotalRevenue),
+            variationGeneralTotalOrders: diffPercentage(previousCountTotalOrders,countTotalOrders),
+            variationNewCustomers: diffPercentage(previousCountNewCustomers,countNewCustomers),
+            variationNewCustomersRevenue: diffPercentage(previousCountNewCustomersRevenue,countNewCustomersRevenue),
         });
+        console.log(diffPercentage(previousAvgOrderValue,avgOrderValue),previousAvgOrderValue,avgOrderValue);
         setAveragePerformance({
             ...averagePerformance,
             isLoading: false,
@@ -180,7 +240,12 @@ export function useDashboardData() {
             avgOrdersDay:avgOrdersDay,
             avgItemsPerOrder:formatter(avgItemsOrder),
             avgOrderValue:formatter(avgOrderValue),
-            avgNewCustomersPerDay:avgNewCustomersDay
+            avgNewCustomersPerDay:avgNewCustomersDay,
+            variationAvgRevenueDay:diffPercentage(previousAvgRevenueDay,avgRevenueDay),
+            variationAvgOrdersDay:diffPercentage(previousAvgOrdersDay,avgOrdersDay),
+            variationAvgItemsPerOrder:diffPercentage(previousAvgItemsOrder,avgItemsOrder),
+            variationAvgOrderValue:diffPercentage(previousAvgOrderValue,avgOrderValue),
+            variationAvgNewCustomersPerDay:diffPercentage(previousAvgNewCustomersDay,avgNewCustomersDay),
         })
     }
     const orderByDashboardRevenues = (labels) => {
@@ -230,7 +295,7 @@ export function useDashboardData() {
         labels.map((label) => {
             let lastDateComparison = null;
 
-            const dataPivot = data.filter( row => label === row.order_revenue_source);
+            const dataPivot = [...data.filter( row => label === row.order_revenue_source)];
             const revenueByWeek = [
                 ...datesArray.map((date, i) => {
                     const dateComparison = new Date(date);
@@ -251,6 +316,8 @@ export function useDashboardData() {
                 })
 
             ];
+
+
             const countRevenue = dataPivot.reduce((accumulator, item) => accumulator + parseFloat(item.order_revenue), 0);
 
 
@@ -311,11 +378,20 @@ export function useDashboardData() {
         generalTotalOrders,
         newCustomers,
         percentageNewCustomersRevenue,
+        variationTotalRevenue,
+        variationGeneralTotalOrders,
+        variationNewCustomers,
+        variationNewCustomersRevenue,
         avgRevenueDay,
         avgOrdersDay,
         avgItemsPerOrder,
         avgOrderValue,
         avgNewCustomersPerDay,
+        variationAvgRevenueDay,
+        variationAvgOrdersDay,
+        variationAvgItemsPerOrder,
+        variationAvgOrderValue,
+        variationAvgNewCustomersPerDay,
         existingCustomerRevenue,
         newCustomerRevenue,
         totalOrders,

@@ -47,6 +47,7 @@ const MainCard = forwardRef(
                 sx={{
                     ...sx,
                     width: '100%',
+                    height: '100%',
                     border: border ? '1px solid' : 'none',
                     borderRadius: 2,
                     borderColor: theme.palette.mode === 'dark' ? theme.palette.divider : theme.palette.grey.A800,
