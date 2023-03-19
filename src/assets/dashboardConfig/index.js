@@ -12,7 +12,8 @@ export const revenueByDateOptions = ({
         type: 'column'
     },
     title: {
-        text: 'Revenue by Date'
+        text: 'Revenue by Date',
+        align: 'left'
     },
     xAxis: {
         type: 'datetime',
@@ -93,7 +94,8 @@ export const revenueBySourcePercentageOptions = ({revenueBySourcePercentage}) =>
         type: 'column'
     },
     title: {
-        text: 'Revenue by Source'
+        text: 'Revenue by Source',
+        align: 'left'
     },
     xAxis: {
         categories: revenueBySourcePercentage[0]
@@ -139,7 +141,8 @@ export const revenueBySourceOptions = ({totalRevenueBySource}) => ({
         inverted: true
     },
     title: {
-        text: 'Revenue by Source'
+        text: 'Revenue by Source',
+        align: 'left'
     },
     xAxis: {
         categories: totalRevenueBySource.map( item => item[0])
@@ -170,6 +173,63 @@ export const revenueBySourceOptions = ({totalRevenueBySource}) => ({
             dataLabels: {
                 enabled: false
             }
+        }
+    ]
+});
+
+export const revenueByCountryOptions = ({totalRevenueByCountry}) => ({
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: 'Revenue by Country',
+        align: 'left'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b><br/> Revenue on the last 30 days: <b>$ {point.tooltip.revenue}</b>'
+    },
+    accessibility: {
+        point: {
+            valueSuffix: '%'
+        }
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            showInLegend: false,
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+            }
+        },
+        ignoreHiddenPoint: false
+    },
+    series: [
+        {
+            name: 'Revenue by Country',
+            colorByPoint: true,
+            data: totalRevenueByCountry.sort((a,b) => a[1] - b[1]).map( (item,i) => {
+                const dataRow = {
+                    name: item[0],
+                    y: item[1],
+                    tooltip: {
+                        revenue: Highcharts.numberFormat(item[2], 0, ',', '.')
+                    }
+                };
+
+                if (i === 0) {
+                    return {
+                        ...dataRow,
+                        sliced: true,
+                        selected: true
+                    }
+                }
+                return dataRow;
+            })
         }
     ]
 });

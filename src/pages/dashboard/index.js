@@ -17,7 +17,8 @@ import HighchartsReact from 'highcharts-react-official';
 import { 
     revenueByDateOptions,
     revenueBySourcePercentageOptions,
-    revenueBySourceOptions 
+    revenueBySourceOptions,
+    revenueByCountryOptions
 } from 'assets/dashboardConfig';
 
 //Hooks
@@ -46,7 +47,8 @@ const DashboardDefault = () => {
         totalOrders,
         newCustomerOrders,
         totalRevenueBySource,
-        revenueBySourcePercentage
+        revenueBySourcePercentage,
+        totalRevenueByCountry
     } = states;
 
     const revenueByDate = revenueByDateOptions({
@@ -62,6 +64,10 @@ const DashboardDefault = () => {
 
     const revenueBySource = revenueBySourceOptions({
         totalRevenueBySource
+    })
+
+    const revenueByCountry = revenueByCountryOptions({
+        totalRevenueByCountry
     })
 
 
@@ -92,16 +98,16 @@ const DashboardDefault = () => {
                                             justifyContent: 'center'
                                         }
                                     }}>
-                                        <AnalyticEcommerce title="Total Revenue" count={totalRevenue} symbol='CURRENCY' percentage={31} />
+                                        <AnalyticEcommerce title="Total Revenue" count={totalRevenue} symbol='CURRENCY' />
                                     </Grid>
                                     <Grid item xs={12} sm={6} md={4} lg={3}>
-                                        <AnalyticEcommerce title="Total Orders" count={generalTotalOrders} percentage={28} />
+                                        <AnalyticEcommerce title="Total Orders" count={generalTotalOrders}/>
                                     </Grid>
                                     <Grid item xs={12} sm={6} md={4} lg={3}>
-                                        <AnalyticEcommerce title="New Customers" count={newCustomers} percentage={27} />
+                                        <AnalyticEcommerce title="New Customers" count={newCustomers} />
                                     </Grid>
                                     <Grid item xs={12} sm={6} md={4} lg={3}>
-                                        <AnalyticEcommerce title="% New Customers Revenue" count={percentageNewCustomersRevenue} symbol='PERCENTAGE' percentage={3} />
+                                        <AnalyticEcommerce title="% New Customers Revenue" count={percentageNewCustomersRevenue} symbol='PERCENTAGE' />
                                     </Grid>
                                 </Grid>
                             </MainCard>
@@ -110,19 +116,19 @@ const DashboardDefault = () => {
                             <MainCard>
                                 <Grid container justifyContent={'space-between'}>
                                     <Grid item xs={12} sm={6} md={6} lg={12/5}>
-                                        <AnalyticEcommerce title="Avg Revenue/Day" count={avgRevenueDay} symbol='CURRENCY' percentage={31} />
+                                        <AnalyticEcommerce title="Avg Revenue/Day" count={avgRevenueDay} symbol='CURRENCY' />
                                     </Grid>
                                     <Grid item xs={12} sm={6} md={6} lg={12/5}>
-                                        <AnalyticEcommerce title="Avg Orders/Day" count={avgOrdersDay} percentage={28} />
+                                        <AnalyticEcommerce title="Avg Orders/Day" count={avgOrdersDay}/>
                                     </Grid>
                                     <Grid item xs={12} sm={6} md={6} lg={12/5}>
-                                        <AnalyticEcommerce title="Avg Items/Order" count={avgItemsPerOrder} percentage={8} />
+                                        <AnalyticEcommerce title="Avg Items/Order" count={avgItemsPerOrder}/>
                                     </Grid>
                                     <Grid item xs={12} sm={6} md={6} lg={12/5}>
-                                        <AnalyticEcommerce title="Avg Order Value" count={avgOrderValue} symbol='CURRENCY' percentage={3} />
+                                        <AnalyticEcommerce title="Avg Order Value" count={avgOrderValue} symbol='CURRENCY' />
                                     </Grid>
                                     <Grid item xs={12} sm={6} md={6} lg={12/5}>
-                                        <AnalyticEcommerce title="Avg New Customers/Day" count={avgNewCustomersPerDay} percentage={27} />
+                                        <AnalyticEcommerce title="Avg New Customers/Day" count={avgNewCustomersPerDay} />
                                     </Grid>
                                 </Grid>
                             </MainCard>
@@ -138,7 +144,7 @@ const DashboardDefault = () => {
                             </MainCard>
                         </Grid>
                     </Grid>
-                    <Grid container rowSpacing={4.5} columnSpacing={1}>
+                    <Grid container rowSpacing={4.5} columnSpacing={1} sx={{mb: 1}}>
                         <Grid item xs={12} sm={6}>
                             <MainCard>
                                 <HighchartsReact 
@@ -152,6 +158,16 @@ const DashboardDefault = () => {
                                 <HighchartsReact 
                                     highcharts={Highcharts}
                                     options={revenueBySource}
+                                />
+                            </MainCard>
+                        </Grid>
+                    </Grid>
+                    <Grid container rowSpacing={4.5} columnSpacing={1}>
+                        <Grid item xs={12}>
+                            <MainCard>
+                                <HighchartsReact 
+                                    highcharts={Highcharts}
+                                    options={revenueByCountry}
                                 />
                             </MainCard>
                         </Grid>
