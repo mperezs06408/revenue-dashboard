@@ -153,31 +153,15 @@ export function useDashboardData() {
     }
 
     const orderByGeneralMetrics = () => {
-        let countTotalRevenue = 0;
-        let countTotalOrders = 0;
-        let countNewCustomers = 0;
-        let countNewCustomersRevenue = 0.0;
-
-        let avgItemsOrder = 0;
-        let totalItemsQuantity = 0;
-
-        for (let i = 0; i < data.length; i++) {
-            const value = data[i];
-
-            countTotalRevenue+= Math.floor(value.order_revenue)
-            countTotalOrders += parseInt(value.num_orders);
-            avgItemsOrder += parseInt(value.item_quantity);
-            totalItemsQuantity += parseInt(value.item_quantity);
-            
-            if (value.customer_type === 'New') {
-                countNewCustomers += 1;
-                countNewCustomersRevenue+= parseFloat(value.order_revenue)
-            }
-        }
+        const countTotalRevenue = data.reduce((accumulator, item) => accumulator + Math.floor(item.order_revenue),0);
+        const countTotalOrders = data.reduce((accumulator, item) => accumulator + parseInt(item.num_orders),0);
+        const countNewCustomers = data.reduce((accumulator, item) => item.customer_type === "New" ? accumulator + 1 : accumulator,0);
+        const countNewCustomersRevenue = data.reduce((accumulator, item) => item.customer_type === "New" ? accumulator + parseFloat(item.order_revenue) : accumulator,0);
+        const totalItemsQuantity = data.reduce((accumulator, item) => accumulator + parseInt(item.item_quantity),0);
+        const avgItemsOrder = totalItemsQuantity/data.length;
 
         const avgRevenueDay = parseInt(countTotalRevenue/30);
         const avgOrdersDay = parseInt(countTotalOrders/30);
-        avgItemsOrder = avgItemsOrder/data.length;
         const avgOrderValue = countTotalRevenue/totalItemsQuantity;
         const avgNewCustomersDay = parseInt(countNewCustomers/30);
 
@@ -200,43 +184,30 @@ export function useDashboardData() {
         })
     }
     const orderByDashboardRevenues = (labels) => {
-        let dataPivot = data;
         let dataNewCustomersResume = [];
         let dataExistingCustomerResume = [];
-        let dataTotalOrders = [];
         let dataNewCustomerOrders = [];
-        let checkedItems = [];
+        let dataTotalOrders = [];
 
-        for (let i = 0; i < labels.length; i++) {
-            let countNewCustomers = 0.0;
-            let countExistingCustomers = 0.0;
-            let countTotalOrders = 0.0;
-            let countNewCustomerOrders = 0.0;
+        const newCustomers = data.filter(row => row.customer_type === "New");
+        const existingCustomers = data.filter(row => row.customer_type === "Existing");
 
-            for (let j = 0; j < dataPivot.length; j++) {
-                if (checkedItems.includes(j)) continue;
+        labels.map((label) => {
+            const dataPivot = data.filter(row => label === row.order_date);
+            const newCustomersPivot = newCustomers.filter(row => label === row.order_date);
+            const existingCustomersPivot = existingCustomers.filter(row => label === row.order_date);
 
-                const value = dataPivot[j];
 
-                if (labels[i] === value.order_date) {                    
-                    if (value.customer_type === 'Existing') countExistingCustomers += parseFloat(value.order_revenue);
-                    
-                    if (value.customer_type === 'New') {
-                        countNewCustomers += parseFloat(value.order_revenue);
-                        countNewCustomerOrders += parseFloat(value.num_orders);
-                    }
+            const countNewCustomersRevenue = newCustomersPivot.reduce((accumulator, item) => accumulator + parseFloat(item.order_revenue), 0);
+            const countExistingCustomersRevenue = existingCustomersPivot.reduce((accumulator, item) => accumulator + parseFloat(item.order_revenue), 0);
+            const countTotalOrders = dataPivot.reduce((accumulator, item) => accumulator + parseInt(item.num_orders),0);
+            const countNewCustomerOrders = newCustomersPivot.reduce( (accumulator, item) => accumulator + parseInt(item.num_orders),0);
 
-                    countTotalOrders += parseFloat(value.num_orders);
-
-                    checkedItems.push(j);
-                }
-            }
-
-            dataNewCustomersResume.push([labels[i], parseInt(countNewCustomers)]);
-            dataExistingCustomerResume.push([labels[i], parseInt(countExistingCustomers)]);
-            dataTotalOrders.push([labels[i], parseInt(countTotalOrders)])
-            dataNewCustomerOrders.push([labels[i], parseInt(countNewCustomerOrders)])
-        }
+            dataNewCustomersResume.push([label, parseInt(countNewCustomersRevenue)]);
+            dataExistingCustomerResume.push([label, parseInt(countExistingCustomersRevenue)]);
+            dataTotalOrders.push([label, parseInt(countTotalOrders)])
+            dataNewCustomerOrders.push([label, parseInt(countNewCustomerOrders)])
+        })
 
         setRevenueByDate({
             ...revenueByDate,
@@ -255,40 +226,37 @@ export function useDashboardData() {
 
         let dataBySource = [];
         let dataBySourcePercentage = [];
-        let checkedItems = [];
 
-        for (let i = 0; i < labels.length; i++) {
-            let countRevenue = 0.0;
-            let dateArrayIndex = 0;
-            let revenueByWeek = [0,0,0,0,0];
-            const label = labels[i];
+        labels.map((label) => {
+            let lastDateComparison = null;
 
-            for (let j = 0; j < data.length; j++) {
-                if (checkedItems.includes(j)) continue;
-
-                const value = data[j];
-                if (label === value.order_revenue_source) {
-                    countRevenue+= parseFloat(value.order_revenue);
-                    checkedItems.push(j);
-
-                    const valueDate = new Date(value.order_date);
-                    let dateArrayValue = new Date(datesArray[dateArrayIndex]);
-                    let weekRevenue = 0;
-                    
-                    if (valueDate <= dateArrayValue) {
-                        weekRevenue = revenueByWeek[dateArrayIndex] + parseInt(value.order_revenue)
-                        revenueByWeek[dateArrayIndex] = weekRevenue
-                    } else {
-                        weekRevenue = revenueByWeek[dateArrayIndex + 1] + parseInt(value.order_revenue)
-                        revenueByWeek[dateArrayIndex + 1] = weekRevenue;
-                        dateArrayIndex += 1;
+            const dataPivot = data.filter( row => label === row.order_revenue_source);
+            const revenueByWeek = [
+                ...datesArray.map((date, i) => {
+                    const dateComparison = new Date(date);
+                    if (i !== 0) {
+                        lastDateComparison = new Date(datesArray[i-1])
                     }
-                }
-            }
-            
+
+                    const sumPerDate = dataPivot.reduce((accumulator, item) => {
+                        const itemDate = new Date(item.order_date);
+
+                        if (!lastDateComparison) {
+                            return itemDate <= dateComparison ? accumulator + parseInt(item.order_revenue) : accumulator
+                        }
+                        return itemDate > lastDateComparison && itemDate <= dateComparison ? accumulator + parseInt(item.order_revenue) : accumulator
+                    }, 0)
+
+                    return sumPerDate
+                })
+
+            ];
+            const countRevenue = dataPivot.reduce((accumulator, item) => accumulator + parseFloat(item.order_revenue), 0);
+
+
             dataBySourcePercentage.push([label, revenueByWeek])
             dataBySource.push([label, parseInt(countRevenue)]);
-        }
+        })
 
         setRevenueBySource({
             ...revenueBySource,
@@ -300,28 +268,35 @@ export function useDashboardData() {
 
     const orderByCountriesRevenue = (countries) => {
         let dataByCountry = [];
-        let checkedItems = [];
-
-        for (let i = 0; i < countries.length; i++) {
-            let countRevenue = 0.0;
-            const country = countries[i];
-
-            for (let j = 0; j < data.length; j++) {
-                if (checkedItems.includes(j)) continue;
-
-                const value = data[j];
-                if (country === value.order_country) {
-                    countRevenue+= parseFloat(value.order_revenue);
-                    checkedItems.push(j);
-                }
-            }
-            
-            dataByCountry.push([country, parseInt(countRevenue)]);
-        }
         
-        const totalRevenue = dataByCountry.reduce((accumulator, value) => accumulator + value[1], 0);
+        const totalRevenue = data.reduce((accumulator, item) => accumulator + parseFloat(item.order_revenue), 0);
+        
+        countries.map((country) => {
+            const dataPivot = data.filter( row => country === row.order_country);
+            const countRevenue = dataPivot.reduce((accumulator, item) => accumulator + parseFloat(item.order_revenue), 0);
 
-        dataByCountry = dataByCountry.map( row => [row[0], parseInt((row[1]/totalRevenue)*100), row[1]])
+            dataByCountry.push([country, parseInt((countRevenue/totalRevenue)*100), countRevenue]);
+        })
+
+        // for (let i = 0; i < countries.length; i++) {
+        //     let countRevenue = 0.0;
+        //     const country = countries[i];
+
+        //     for (let j = 0; j < data.length; j++) {
+        //         if (checkedItems.includes(j)) continue;
+
+        //         const value = data[j];
+        //         if (country === value.order_country) {
+        //             countRevenue+= parseFloat(value.order_revenue);
+        //             checkedItems.push(j);
+        //         }
+        //     }
+            
+        //     dataByCountry.push([country, parseInt(countRevenue)]);
+        // }
+        
+
+        // dataByCountry = dataByCountry.map( row => [row[0], parseInt((row[1]/totalRevenue)*100), row[1]])
 
         setRevenueByCountry({
             ...revenueBySource,

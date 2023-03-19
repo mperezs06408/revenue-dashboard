@@ -116,7 +116,10 @@ export const revenueBySourcePercentageOptions = ({revenueBySourcePercentage}) =>
                 }
                 return shortValue+suffixes[suffixNum];
             }
-        }
+        },
+    },
+    legend: {
+        reversed: true
     },
     tooltip: {
         pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',

@@ -42,12 +42,6 @@ For testing use of this DEMO, you can enter to the next link:
 
 - [Revenue Dashboard by GitHub Pages](https://mperezs06408.github.io/revenue-dashboard/)
 
-### Additional information
-
-Data comparison with the total of data provided (by percentage) to complete the demo was left by default over the general overview. e.g. Percentage showed in total revenue is a stacked data.
-
-In the next implementation this feature will be add.
-
 ### Available taxonomy for Revenue Dashboard
 
 Because Revenue Dashboard implements Mantis Templates as a first version, code implementation for this DEMO is located over the next taxonomy:
